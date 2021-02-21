@@ -140,40 +140,4 @@ module.exports = class Users{
             throw new Error(error);
         }
     }
-
-    static async getWishlistByEmail(email){
-        try {
-            const wishlist = await db('wishlist').where('email', email).select('*');
-            return wishlist;
-        } catch (error) {
-            console.log(error);
-            throw new Error(error);
-        }
-    }
-
-    static async addWishlist(productid, useremail){
-        try {
-            const wishlist = await db('wishlist').insert({
-                'id': unique_id(),
-                'product_id': productid,
-                'email': useremail
-            }).returning('*');
-            return wishlist
-        } catch (error) {
-            console.log(error);
-            throw new Error(error);
-        }
-    }
-
-    static async deleteWishlist(id){
-        try {
-            const wishlist = await db('wishlist').del().where({
-                'id': id
-            }).returning('*');
-            return wishlist
-        } catch (error) {
-            console.log(error);
-            throw new Error(error);
-        }
-    }
 }

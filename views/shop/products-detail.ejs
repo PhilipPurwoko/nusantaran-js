@@ -18,11 +18,6 @@
                 <h5>Rp. <%= product.price %></h5>
                 <% if (isAuthenticated) { %>
                     <div class="d-flex justify-content-start">
-                        <form method="POST" action="/add-wishlist">
-                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                            <input type="hidden" name="productid" value="<%= product.id %>">
-                            <button type="submit" class="btn btn-outline-secondary">WISHLIST</button>
-                        </form>
                         <div class="mr-2"></div>
                         <form method="POST" action="/cart">
                             <input type="hidden" name="productID" value="<%= product.id %>">
