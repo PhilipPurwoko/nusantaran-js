@@ -73,7 +73,7 @@ exports.postAddProduct = ash(async (req, res) => {
         )
         try {
             await product.save()
-            return res.status(200).redirect('/admin/product')
+            return res.redirect('/admin/product')
         } catch (error) {
             console.log(error)
             deleteImage()
@@ -85,7 +85,7 @@ exports.postAddProduct = ash(async (req, res) => {
                 'description': req.body.description,
                 'price': req.body.price
             })
-            return res.status(422).redirect('/admin/product')
+            return res.redirect('/admin/product')
         }
     } else {
         deleteImage()
@@ -97,7 +97,7 @@ exports.postAddProduct = ash(async (req, res) => {
             'description': req.body.description,
             'price': req.body.price
         })
-        return res.status(422).redirect('/admin/product')
+        return res.redirect('/admin/product')
     }
 })
 
@@ -115,17 +115,17 @@ exports.postUpdateProduct = ash(async (req, res) => {
         }
     }
     await Product.updateProduct(product)
-    return res.status(200).redirect('/admin/product')
+    return res.redirect('/admin/product')
 })
 
 exports.postDeleteProduct = ash(async (req, res) => {
     await Product.deleteProduct(req.body.id)
-    return res.status(200).redirect('/admin/product')
+    return res.redirect('/admin/product')
 })
 
 exports.postChangeStatus = ash(async (req, res) => {
     const id = req.body.id
     const status = req.body.status
     await User.updateStatus(id, status)
-    return res.status(200).redirect('/myorder')
+    return res.redirect('/myorder')
 })

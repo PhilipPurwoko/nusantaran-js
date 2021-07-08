@@ -27,7 +27,7 @@ exports.postLogout = (req, res, next) => {
             console.log(error)
             next(error)
         }
-        return res.status(200).redirect('/')
+        return res.redirect('/')
     })
 }
 
@@ -103,13 +103,13 @@ exports.postReset = ash(async (req, res, next) => {
                 await Users.setResetToken(req.body.email, token)
                 await sgMail.send(email)
                 req.flash('message', 'Email has been sent, token is valid for one hour, please check your email')
-                return res.status(200).redirect('/reset')
+                return res.redirect('/reset')
             } catch (error) {
                 try {
                     await Users.updateResetToken(req.body.email, token)
                     await sgMail.send(email)
                     req.flash('message', 'Expiration token has been updated to 1 hour, please check your email')
-                    return res.status(200).redirect('/reset')
+                    return res.redirect('/reset')
                 } catch (error) {
                     next(error)
                 }
@@ -122,7 +122,7 @@ exports.getNewPassword = ash(async (req, res) => {
     const email = req.query.email
     const token = req.query.token
     if (email === undefined || token === undefined) {
-        return res.status(404).redirect('/404')
+        return res.redirect('/404')
     }
 
     let tokenError = false
@@ -158,7 +158,7 @@ exports.postNewPassword = ash(async (req, res) => {
     const email = req.body.email
     const token = req.body.token
     if (email === undefined || token === undefined) {
-        return res.status(404).redirect('/404')
+        return res.redirect('/404')
     }
     const validationError = validationResult(req)
     const password = req.body.password
@@ -176,7 +176,7 @@ exports.postNewPassword = ash(async (req, res) => {
     const users = await Users.updatePassword(email, password)
     const user = users[0]
     await Users.deleteResetToken(user.email)
-    return res.status(200).redirect('/profile')
+    return res.redirect('/profile')
 })
 
 exports.getMyOrder = ash(async (req, res) => {
@@ -185,7 +185,7 @@ exports.getMyOrder = ash(async (req, res) => {
     const orderFunction = isAdmin ? Users.getAllOrders() : Users.getOrdersByEmail(req.session.user.email)
     const orders = await orderFunction
     const hasOrder = orders.length > 0 ? true : false
-    res.status(200).render('user/myorder', {
+    res.render('user/myorder', {
         'title': 'Nusantaran JS | My Order History',
         'path': '/myorder',
         'hasOrder': hasOrder,
@@ -200,7 +200,7 @@ exports.getWishlist = ash(async (req, res) => {
         wishlist = []
     }
 
-    res.status(200).render('user/wishlist', {
+    res.render('user/wishlist', {
         'title': 'Nusantaran JS | My Wishlist',
         'path': '/wishlist',
         'hasWishlist': hasWishlist,
@@ -216,12 +216,12 @@ exports.postAddWishlist = ash(async (req, res) => {
     if (!haveProduct) {
         await Users.addWishlist(product, owner)
     }
-    return res.status(200).redirect('/wishlist')
+    return res.redirect('/wishlist')
 })
 
 exports.postDeleteWishlist = ash(async (req, res) => {
     await Users.deleteWishlist(req.body.id)
-    return res.status(200).redirect('/wishlist')
+    return res.redirect('/wishlist')
 })
 
 exports.getInvoice = ash(async (req, res) => {

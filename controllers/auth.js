@@ -78,7 +78,7 @@ exports.postRegister = ash(async (req, res) => {
             await Users.updateData(req.body.name, req.file.path, req.body.address, userEmail, req.body.password)
             await sgMail.send(email)
             req.flash('successMessage', 'Expiration token has been updated to 1 hour, please check your email')
-            return res.status(200).redirect('/login')
+            return res.redirect('/login')
         }
     }
 
@@ -86,7 +86,7 @@ exports.postRegister = ash(async (req, res) => {
     await Users.addUser(req.body.name, req.file.path, req.body.address, userEmail, req.body.password)
     await sgMail.send(email)
     req.flash('successMessage', 'Successfully signed up. Please check your email and verify your account')
-    return res.status(200).redirect('/login')
+    return res.redirect('/login')
 })
 
 exports.getVerified = ash(async (req, res) => {
@@ -95,7 +95,7 @@ exports.getVerified = ash(async (req, res) => {
     const users = await Users.statusVerify(email)
     if (users.length === 0) {
         // If email specified is not in users database
-        return res.status(404).redirect('/404')
+        return res.redirect('/404')
     } else {
         const user = users[0]
         let error = null
@@ -105,7 +105,7 @@ exports.getVerified = ash(async (req, res) => {
             }
         } else {
             // If email is in database but incorrect token
-            return res.status(404).redirect('/404')
+            return res.redirect('/404')
         }
 
         await Users.verifyAccount(email)
@@ -141,7 +141,7 @@ exports.postLogin = ash(async (req, res) => {
         req.flash('errorMessage', 'User not found. Please register')
         req.flash('placeholder', req.body.email)
         req.flash('errors', { 'param': 'email' })
-        return res.status(422).redirect('/login')
+        return res.redirect('/login')
     }
 
     // If user is found but account status is not verified
@@ -149,7 +149,7 @@ exports.postLogin = ash(async (req, res) => {
         req.flash('errorMessage', 'User is not verified. Check your email and verify your account')
         req.flash('placeholder', req.body.email)
         req.flash('errors', { 'param': 'email' })
-        return res.status(422).redirect('/login')
+        return res.redirect('/login')
     }
 
     // If user is found and verified but enter wrong password
@@ -158,7 +158,7 @@ exports.postLogin = ash(async (req, res) => {
         req.flash('errorMessage', 'Wrong password for this user')
         req.flash('placeholder', req.body.email)
         req.flash('errors', { 'param': 'password' })
-        return res.status(422).redirect('/login')
+        return res.redirect('/login')
     }
 
     // Just fine
@@ -170,5 +170,5 @@ exports.postLogin = ash(async (req, res) => {
     if (isAdmin) {
         req.session.isAdmin = true
     }
-    return res.status(200).redirect('/')
+    return res.redirect('/')
 })
